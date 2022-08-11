@@ -11,8 +11,6 @@ public class Snake : MonoBehaviour
     public float speed;
     private Vector3 axis;
     private Transform hat;
-    public Camera firstPersonCamera;
-    public Camera thirdPersonCamera;
 
 
     // Start is called before the first frame update
@@ -22,13 +20,12 @@ public class Snake : MonoBehaviour
         targetTile = transform.position;
         axis = Vector3.up;
         hat = transform.GetChild(0);
-        firstPersonCamera.enabled = false;
-        thirdPersonCamera.enabled = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Control movement of snake
         if (Input.GetAxis("Horizontal") < 0 && Input.anyKeyDown) {
             direction = Quaternion.AngleAxis(-90, axis) * direction;
         }
@@ -40,9 +37,6 @@ public class Snake : MonoBehaviour
         }
         else if (Input.GetAxis("Vertical") > 0 && Input.anyKeyDown) {
             (direction, axis) = (axis, -direction);
-        }
-        if (Input.GetButtonDown("Jump")) {
-            ToggleView();
         }
     }
 
@@ -72,11 +66,6 @@ public class Snake : MonoBehaviour
             yield return null;
         }
         transform.position = finalPos;
-    }
-
-    private void ToggleView() {
-        firstPersonCamera.enabled = !firstPersonCamera.enabled;
-        thirdPersonCamera.enabled = !thirdPersonCamera.enabled;
     }
 
 }

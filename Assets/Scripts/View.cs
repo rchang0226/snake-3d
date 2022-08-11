@@ -20,13 +20,17 @@ public class View : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Fire1")) {
-            direction = Vector3.up * Input.GetAxis("Mouse X");
-            direction += -transform.right.normalized * Input.GetAxis("Mouse Y");
-            transform.RotateAround(point, direction, speed);
-        }
+        if (_camera.enabled) 
+        {
+            if (Input.GetButton("Fire1")) 
+            {
+                direction = Vector3.up * Input.GetAxis("Mouse X");
+                direction += -transform.right.normalized * Input.GetAxis("Mouse Y");
+                transform.RotateAround(point, direction, speed);
+            }
 
-        float zoom = Input.GetAxis("Mouse ScrollWheel") * -zoomSensitivity;
-        _camera.orthographicSize += zoom;
+            float zoom = Input.GetAxis("Mouse ScrollWheel") * -zoomSensitivity;
+            _camera.orthographicSize += zoom;
+        }
     }
 }
