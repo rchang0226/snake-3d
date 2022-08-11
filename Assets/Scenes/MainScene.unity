@@ -510,6 +510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1378817935}
   speed: 1
+  zoomSensitivity: 10
 --- !u!1 &1046984311
 GameObject:
   m_ObjectHideFlags: 0
