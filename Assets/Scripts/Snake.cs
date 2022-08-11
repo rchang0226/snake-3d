@@ -9,38 +9,40 @@ public class Snake : MonoBehaviour
     private Vector3 targetTile;
     private Vector3 currTile;
     public float speed;
+    private Vector3 axis;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        direction = Vector3.right;
+        direction = Vector3.forward;
         targetTile = transform.position;
+        axis = Vector3.up;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetAxis("Horizontal") < 0) {
-            direction = Vector3.right;
+        if (Input.GetAxis("Horizontal") < 0 && Input.anyKeyDown) {
+            direction = Quaternion.AngleAxis(-90, axis) * direction;
         }
-        else if (Input.GetAxis("Horizontal") > 0) {
-            direction = Vector3.left;
+        else if (Input.GetAxis("Horizontal") > 0 && Input.anyKeyDown) {
+            direction = Quaternion.AngleAxis(90, axis) * direction;
         }
-        else if (Input.GetAxis("Vertical") < 0) {
-            direction = Vector3.down;
+        else if (Input.GetAxis("Vertical") < 0 && Input.anyKeyDown) {
+            (direction, axis) = (-axis, direction);
         }
-        else if (Input.GetAxis("Vertical") > 0) {
-            direction = Vector3.up;
+        else if (Input.GetAxis("Vertical") > 0 && Input.anyKeyDown) {
+            (direction, axis) = (axis, -direction);
         }
     }
 
     void FixedUpdate() {
         currTile = new Vector3 (
-            Mathf.Round(transform.position.x),
-            Mathf.Round(transform.position.y),
-            Mathf.Round(transform.position.z)
-        );
+        Mathf.Round(transform.position.x),
+        Mathf.Round(transform.position.y),
+        Mathf.Round(transform.position.z));
+
         if (targetTile.Equals(transform.position)) {
             targetTile = currTile + direction;
             StartCoroutine(SmoothLerp(1/speed));

@@ -7,6 +7,7 @@ public class Camera : MonoBehaviour
     public Transform target;
     private Vector3 point;
     private Vector3 direction = Vector3.zero;
+    public float speed;
 
     void Start()
     {
@@ -16,21 +17,10 @@ public class Camera : MonoBehaviour
 
     void Update()
     {
-        if ((Input.GetKey(KeyCode.A))) {
-            direction = Vector3.up;
+        if (Input.GetButton("Fire1")) {
+            direction = Vector3.up * Input.GetAxis("Mouse X");
+            direction += -transform.right.normalized * Input.GetAxis("Mouse Y");
+            transform.RotateAround(point, direction, speed);
         }
-        else if (Input.GetKey(KeyCode.D)) {
-            direction = Vector3.down;
-        }
-        else if (Input.GetKey(KeyCode.S)) {
-            direction = -transform.right.normalized;
-        }
-        else if (Input.GetKey(KeyCode.W)) {
-            direction = transform.right.normalized;
-        }
-        else {
-            direction = Vector3.zero;
-        }
-        transform.RotateAround(point, direction, 0.5f);
     }
 }
