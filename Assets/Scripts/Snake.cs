@@ -10,6 +10,7 @@ public class Snake : MonoBehaviour
     private Vector3 currTile;
     public float speed;
     private Vector3 axis;
+    private Transform hat;
 
 
     // Start is called before the first frame update
@@ -18,6 +19,7 @@ public class Snake : MonoBehaviour
         direction = Vector3.forward;
         targetTile = transform.position;
         axis = Vector3.up;
+        hat = transform.GetChild(0);
     }
 
     // Update is called once per frame
@@ -46,9 +48,11 @@ public class Snake : MonoBehaviour
         if (targetTile.Equals(transform.position)) {
             targetTile = currTile + direction;
             StartCoroutine(SmoothLerp(1/speed));
+            hat.transform.localPosition = axis * 0.5f;
         }
     }
 
+    // SmoothLerp code repurposed from https://answers.unity.com/questions/1501234/smooth-forward-movement-with-a-coroutine.html
     private IEnumerator SmoothLerp (float time) {
         Vector3 startingPos = currTile;
         Vector3 finalPos = targetTile;
