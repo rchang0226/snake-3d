@@ -10,10 +10,12 @@ public class Snake : MonoBehaviour
     private Vector3 currTile;
     public float speed;
 
+
     // Start is called before the first frame update
     void Start()
     {
         direction = Vector3.right;
+        targetTile = transform.position;
     }
 
     // Update is called once per frame
@@ -39,7 +41,24 @@ public class Snake : MonoBehaviour
             Mathf.Round(transform.position.y),
             Mathf.Round(transform.position.z)
         );
-        targetTile = currTile + direction;
-        transform.position = Vector3.Lerp(transform.position, targetTile, speed);
+        if (targetTile.Equals(transform.position)) {
+            targetTile = currTile + direction;
+            StartCoroutine(SmoothLerp(1/speed));
+        }
     }
+
+    private IEnumerator SmoothLerp (float time) {
+        Vector3 startingPos = currTile;
+        Vector3 finalPos = targetTile;
+
+        float elapsedTime = 0;
+
+        while (elapsedTime < time) {
+            transform.position = Vector3.Lerp(startingPos, finalPos, (elapsedTime/time));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = finalPos;
+    }
+
 }
