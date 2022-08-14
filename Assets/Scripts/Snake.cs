@@ -11,6 +11,8 @@ public class Snake : MonoBehaviour
     public float speed;
     private Vector3 axis;
     private Transform hat;
+    private Vector3 rotation;
+    public float rotationSpeed;
 
 
     // Start is called before the first frame update
@@ -28,14 +30,18 @@ public class Snake : MonoBehaviour
         // Control movement of snake
         if (Input.GetAxis("Horizontal") < 0 && Input.anyKeyDown) {
             direction = Quaternion.AngleAxis(-90, axis) * direction;
+            rotation = axis * -90;
         }
         else if (Input.GetAxis("Horizontal") > 0 && Input.anyKeyDown) {
             direction = Quaternion.AngleAxis(90, axis) * direction;
+            rotation = axis * 90;
         }
         else if (Input.GetAxis("Vertical") < 0 && Input.anyKeyDown) {
+            rotation = Vector3.Cross(direction, axis) * -90;
             (direction, axis) = (-axis, direction);
         }
         else if (Input.GetAxis("Vertical") > 0 && Input.anyKeyDown) {
+            rotation = Vector3.Cross(direction, axis) * 90;
             (direction, axis) = (axis, -direction);
         }
     }
@@ -50,6 +56,8 @@ public class Snake : MonoBehaviour
             targetTile = currTile + direction;
             StartCoroutine(SmoothLerp(1/speed));
             hat.transform.localPosition = axis * 0.5f;
+            StartCoroutine(SmoothRotation(1/rotationSpeed));
+            rotation = Vector3.zero;
         }
     }
 
@@ -66,6 +74,20 @@ public class Snake : MonoBehaviour
             yield return null;
         }
         transform.position = finalPos;
+    }
+
+    private IEnumerator SmoothRotation (float time) {
+        Vector3 startingRot = transform.eulerAngles;
+        Vector3 finalRot = startingRot + rotation;
+
+        float elapsedTime = 0;
+
+        while (elapsedTime < time) {
+            transform.eulerAngles = Vector3.Lerp(startingRot, finalRot, (elapsedTime/time));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        transform.eulerAngles = finalRot;
     }
 
 }
