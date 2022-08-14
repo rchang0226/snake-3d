@@ -53,31 +53,30 @@ public class Snake : MonoBehaviour
         Mathf.Round(transform.position.z));
 
         if (targetTile.Equals(transform.position)) {
+
             // update tail position
             for (int i = segments.Count -1; i > 0; i--) {
-                segments[i].position = segments[i-1].position;
+                StartCoroutine(SmoothLerp(1/speed, segments[i], segments[i].position, segments[i-1].position));
             }
 
-            // update head position
+           // update head position
             targetTile = currTile + direction;
-            StartCoroutine(SmoothLerp(1/speed));
+            StartCoroutine(SmoothLerp(1/speed, transform, currTile, targetTile));
             hat.transform.localPosition = axis * 0.5f;
         }
     }
 
-    // SmoothLerp code repurposed from https://answers.unity.com/questions/1501234/smooth-forward-movement-with-a-coroutine.html
-    private IEnumerator SmoothLerp (float time) {
-        Vector3 startingPos = currTile;
-        Vector3 finalPos = targetTile;
 
+    /* SmoothLerp code repurposed from https://answers.unity.com/questions/1501234/smooth-forward-movement-with-a-coroutine.html */
+    private IEnumerator SmoothLerp (float time, Transform obj, Vector3 startingPos, Vector3 finalPos) {
         float elapsedTime = 0;
 
         while (elapsedTime < time) {
-            transform.position = Vector3.Lerp(startingPos, finalPos, (elapsedTime/time));
+            obj.position = Vector3.Lerp(startingPos, finalPos, (elapsedTime/time));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        transform.position = finalPos;
+        obj.position = finalPos;
     }
 
     private void Grow() {
