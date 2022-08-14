@@ -5,11 +5,11 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
 
-    private Vector3 direction;
+    public Vector3 direction;
     private Vector3 targetTile;
     private Vector3 currTile;
     public float speed;
-    private Vector3 axis;
+    public Vector3 axis;
     private Transform hat;
     private Vector3 rotation;
     public float rotationSpeed;
