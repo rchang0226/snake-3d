@@ -13,6 +13,7 @@ public class Snake : MonoBehaviour
     private Transform hat;
     private List<Transform> segments; // the snake body segments
     public Transform segmentPrefab;
+    private bool reset;
 
 
     // Start is called before the first frame update
@@ -25,6 +26,8 @@ public class Snake : MonoBehaviour
 
         segments = new List<Transform>();
         segments.Add(this.transform); // the head is the first segment
+
+        reset = false;
 
     }
 
@@ -63,6 +66,12 @@ public class Snake : MonoBehaviour
             targetTile = currTile + direction;
             StartCoroutine(SmoothLerp(1/speed, transform, currTile, targetTile));
             hat.transform.localPosition = axis * 0.5f;
+
+            if (reset) {
+                StopAllCoroutines();
+                ResetState();
+                reset = false;
+            }
         }
     }
 
@@ -85,9 +94,25 @@ public class Snake : MonoBehaviour
         segments.Add(segment);
     }
 
+    private void ResetState() {
+        for (int i = 1; i < segments.Count; i++) {
+            Destroy(segments[i].gameObject);
+        }
+
+        segments.Clear();
+        segments.Add(transform);
+
+        this.transform.position = Vector3.zero;
+        targetTile = Vector3.zero;
+    }
+
     private void OnTriggerEnter(Collider obj) {
         if (obj.tag == "Food") {
             Grow();
+        }
+        else if (obj.tag == "Obstacle") {
+            reset = true;
+            print("collided");
         }
     }
 
