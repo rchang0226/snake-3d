@@ -11,6 +11,8 @@ public class Snake : MonoBehaviour
     public float speed;
     private Vector3 axis;
     private Transform hat;
+    private List<Transform> segments; // the snake body segments
+    public Transform segmentPrefab;
 
 
     // Start is called before the first frame update
@@ -20,6 +22,10 @@ public class Snake : MonoBehaviour
         targetTile = transform.position;
         axis = Vector3.up;
         hat = transform.GetChild(0);
+
+        segments = new List<Transform>();
+        segments.Add(this.transform); // the head is the first segment
+
     }
 
     // Update is called once per frame
@@ -47,6 +53,12 @@ public class Snake : MonoBehaviour
         Mathf.Round(transform.position.z));
 
         if (targetTile.Equals(transform.position)) {
+            // update tail position
+            for (int i = segments.Count -1; i > 0; i--) {
+                segments[i].position = segments[i-1].position;
+            }
+
+            // update head position
             targetTile = currTile + direction;
             StartCoroutine(SmoothLerp(1/speed));
             hat.transform.localPosition = axis * 0.5f;
@@ -66,6 +78,18 @@ public class Snake : MonoBehaviour
             yield return null;
         }
         transform.position = finalPos;
+    }
+
+    private void Grow() {
+        Transform segment = Instantiate(segmentPrefab);
+        segment.position = segments[segments.Count - 1].position;
+        segments.Add(segment);
+    }
+
+    private void OnTriggerEnter(Collider obj) {
+        if (obj.tag == "Food") {
+            Grow();
+        }
     }
 
 }
