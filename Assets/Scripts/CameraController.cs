@@ -7,8 +7,6 @@ public class CameraController : MonoBehaviour
 
     public Camera firstPersonCamera;
     public Camera thirdPersonCamera;
-    public float sensitivity;
-
 
     // Start is called before the first frame update
     void Start()
