@@ -15,6 +15,8 @@ public class Snake : MonoBehaviour
     public Transform segmentPrefab;
     private bool reset;
     private bool grow;
+    public int initialSize;
+    private int sizeCounter; // to slowly instantiate the initial size
 
 
     // Start is called before the first frame update
@@ -30,6 +32,8 @@ public class Snake : MonoBehaviour
 
         reset = false;
         grow = false;
+
+        sizeCounter = initialSize;
 
     }
 
@@ -61,6 +65,11 @@ public class Snake : MonoBehaviour
 
             for (int i = 1; i < segments.Count; i++) {
                 segments[i].GetComponent<BoxCollider>().enabled = true;
+            }
+
+            if (sizeCounter > 0) {
+                Grow();
+                sizeCounter--;
             }
 
             if (grow) {
