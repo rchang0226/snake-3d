@@ -14,6 +14,7 @@ public class Snake : MonoBehaviour
     private List<Transform> segments; // the snake body segments
     public Transform segmentPrefab;
     private bool reset;
+    private bool grow;
 
 
     // Start is called before the first frame update
@@ -28,6 +29,7 @@ public class Snake : MonoBehaviour
         segments.Add(this.transform); // the head is the first segment
 
         reset = false;
+        grow = false;
 
     }
 
@@ -56,6 +58,15 @@ public class Snake : MonoBehaviour
         Mathf.Round(transform.position.z));
 
         if (targetTile.Equals(transform.position)) {
+
+            for (int i = 1; i < segments.Count; i++) {
+                segments[i].GetComponent<BoxCollider>().enabled = true;
+            }
+
+            if (grow) {
+                Grow();
+                grow = false;
+            }
 
             // update tail position
             for (int i = segments.Count -1; i > 0; i--) {
@@ -90,6 +101,7 @@ public class Snake : MonoBehaviour
 
     private void Grow() {
         Transform segment = Instantiate(segmentPrefab);
+        segment.GetComponent<BoxCollider>().enabled = false;
         segment.position = segments[segments.Count - 1].position;
         segments.Add(segment);
     }
@@ -108,7 +120,7 @@ public class Snake : MonoBehaviour
 
     private void OnTriggerEnter(Collider obj) {
         if (obj.tag == "Food") {
-            Grow();
+            grow = true;
         }
         else if (obj.tag == "Obstacle") {
             reset = true;
