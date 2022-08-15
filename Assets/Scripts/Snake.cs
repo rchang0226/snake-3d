@@ -22,7 +22,7 @@ public class Snake : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        direction = Vector3.forward;
+        direction = Vector3.right;
         targetTile = transform.position;
         axis = Vector3.up;
         hat = transform.GetChild(0);
@@ -122,6 +122,7 @@ public class Snake : MonoBehaviour
 
         segments.Clear();
         segments.Add(transform);
+        sizeCounter = initialSize;
 
         this.transform.position = Vector3.zero;
         targetTile = Vector3.zero;
