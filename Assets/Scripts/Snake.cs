@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
 
 public class Snake : MonoBehaviour
 {
@@ -17,6 +20,7 @@ public class Snake : MonoBehaviour
     private bool grow;
     public int initialSize;
     private int sizeCounter; // to slowly instantiate the initial size
+    public Transform food;
 
 
     // Start is called before the first frame update
@@ -93,6 +97,25 @@ public class Snake : MonoBehaviour
                 reset = false;
             }
         }
+    }
+
+    void OnEpisodeBegin() {
+        StopAllCoroutines();
+        ResetState();
+        reset = false;
+    }
+
+    void CollectObserviations(VectorSensor sensor) {
+        sensor.AddObservation(food.localPosition);
+        foreach(var segment in segments) {
+            sensor.AddObservation(segment.localPosition);
+        }
+        sensor.AddObservation(this.transform.)
+
+    }
+
+    void OnActionReceived(ActionBuffers actionBuffers) {
+
     }
 
 
